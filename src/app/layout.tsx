@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SanityLive } from "@/sanity/lib/live";
 import { Quicksand, Geist_Mono, Abril_Fatface } from "next/font/google";
 import "./globals.css";
 
@@ -35,6 +36,7 @@ export default function RootLayout({
     <html lang="en" className={`${quicksand.variable} ${geistMono.variable} ${abrilFatface.variable}`}>
       <body className="antialiased">
         {children}
+        <SanityLive />
       </body>
     </html>
   );

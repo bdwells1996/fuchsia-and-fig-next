@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { SanityLive } from "@/sanity/lib/live";
+import { VisualEditing } from "next-sanity/visual-editing";
+import { draftMode } from "next/headers";
 import { Quicksand, Geist_Mono, Abril_Fatface } from "next/font/google";
 import "./globals.css";
 
@@ -27,16 +29,18 @@ export const metadata: Metadata = {
   description: "Fuchsia and Fig",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { isEnabled: isDraftMode } = await draftMode();
+
   return (
     <html lang="en" className={`${quicksand.variable} ${geistMono.variable} ${abrilFatface.variable}`}>
       <body className="antialiased">
         {children}
-        <SanityLive />
+        {isDraftMode ? <VisualEditing /> : <SanityLive />}
       </body>
     </html>
   );

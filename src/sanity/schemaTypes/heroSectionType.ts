@@ -4,7 +4,7 @@ import { defineArrayMember, defineField, defineType } from 'sanity'
 export const heroSectionType = defineType({
   name: 'heroSection',
   title: 'Hero Section',
-  type: 'document',
+  type: 'object',
   icon: HomeIcon,
   fields: [
     defineField({

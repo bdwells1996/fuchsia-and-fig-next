@@ -19,7 +19,22 @@ function Tagline({ tagline, accentWord }: { tagline: string; accentWord: string 
   return (
     <>
       {tagline.slice(0, idx)}
-      <span style={{ color: 'var(--color-bloom-500)' }}>{accentWord}</span>
+      <span className="relative inline-block" style={{ color: 'var(--color-bloom-500)' }}>
+        {accentWord}
+        <svg
+          aria-hidden="true"
+          className="absolute left-0 w-full overflow-visible pointer-events-none"
+          style={{ bottom: '-0.2em', height: '0.35em' }}
+          viewBox="0 0 100 10"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M 2,5 C 18,2 36,1 54,3 C 72,5 86,6 98,4 C 90,8 74,9 54,7 C 34,5 16,6 2,7 Z"
+            fill="currentColor"
+            opacity="0.85"
+          />
+        </svg>
+      </span>
       {tagline.slice(idx + accentWord.length)}
     </>
   )

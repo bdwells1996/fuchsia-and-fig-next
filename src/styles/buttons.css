@@ -1,0 +1,217 @@
+@layer components {
+
+  /* ==========================================
+     BUTTONS
+     Usage: <button class="btn btn-lg btn-primary">
+  ========================================== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none;
+    white-space: nowrap;
+    outline: none;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      border-color 150ms ease,
+      box-shadow 150ms ease,
+      transform 100ms ease,
+      opacity 150ms ease;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* --- Sizes --- */
+  .btn-xs  { height: 1.75rem; padding: 0 0.75rem;  font-size: 0.75rem;  }
+  .btn-sm  { height: 2.25rem; padding: 0 1rem;     font-size: 0.875rem; }
+  .btn-md  { height: 2.75rem; padding: 0 1.375rem; font-size: 1rem;     }
+  .btn-lg  { height: 3.25rem; padding: 0 1.75rem;  font-size: 1.0625rem;}
+  .btn-xl  { height: 3.75rem; padding: 0 2.25rem;  font-size: 1.125rem; }
+
+  /* --- Icon-only (square) --- */
+  .btn-icon-sm { height: 2.25rem; width: 2.25rem; padding: 0; }
+  .btn-icon-md { height: 2.75rem; width: 2.75rem; padding: 0; }
+  .btn-icon-lg { height: 3.25rem; width: 3.25rem; padding: 0; }
+
+  /* --- Variants --- */
+
+  /* Primary — violet filled, blooms on hover */
+  .btn-primary {
+    background-color: #883eaa;   /* violet-500 */
+    color: #ffffff;
+    box-shadow: 0 2px 8px -2px rgb(136 62 170 / 0.25);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: #d72f68;   /* bloom-500 */
+    box-shadow: 0 4px 16px -4px rgb(215 47 104 / 0.30);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active:not(:disabled) {
+    background-color: #b42253;   /* bloom-600 */
+    box-shadow: 0 2px 8px -2px rgb(215 47 104 / 0.25);
+    transform: translateY(0);
+  }
+
+  /* Secondary — bloom filled, violets on hover */
+  .btn-secondary {
+    background-color: #d72f68;   /* bloom-500 */
+    color: #ffffff;
+    box-shadow: 0 2px 8px -2px rgb(215 47 104 / 0.25);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background-color: #883eaa;   /* violet-500 */
+    box-shadow: 0 4px 16px -4px rgb(136 62 170 / 0.30);
+    transform: translateY(-1px);
+  }
+  .btn-secondary:active:not(:disabled) {
+    background-color: #6f328b;   /* violet-600 */
+    box-shadow: 0 2px 8px -2px rgb(136 62 170 / 0.25);
+    transform: translateY(0);
+  }
+
+  /* Outline — neutral border, violet on hover */
+  .btn-outline {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1.5px solid var(--border);
+  }
+  .btn-outline:hover:not(:disabled) {
+    border-color: #883eaa;       /* violet-500 */
+    color: #883eaa;
+    background-color: transparent;
+  }
+  .btn-outline:active:not(:disabled) {
+    background-color: #faf4fb;   /* violet-50 */
+  }
+
+  /* Outline secondary — kept for completeness */
+  .btn-outline-secondary {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1.5px solid var(--border);
+  }
+  .btn-outline-secondary:hover:not(:disabled) {
+    border-color: #883eaa;
+    color: #883eaa;
+    background-color: transparent;
+  }
+
+  /* Outline dark — stronger border for tinted/coloured backgrounds */
+  .btn-outline-dark {
+    background-color: transparent;
+    color: var(--color-fig-500);
+    border: 1.5px solid var(--color-fig-500);
+  }
+  .btn-outline-dark:hover:not(:disabled) {
+    border-color: #883eaa;
+    color: #883eaa;
+    background-color: transparent;
+  }
+  .btn-outline-dark:active:not(:disabled) {
+    background-color: #faf4fb;   /* violet-50 */
+  }
+
+  /* Outline white — for vivid/dark banner backgrounds */
+  .btn-outline-white {
+    background-color: transparent;
+    color: inherit;
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+  }
+  .btn-outline-white:hover:not(:disabled) {
+    border-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .btn-outline-white:active:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Outline sage — for sage-500 banner background */
+  .btn-outline-sage {
+    background-color: transparent;
+    color: var(--color-sage-800);
+    border: 1.5px solid var(--color-sage-800);
+  }
+  .btn-outline-sage:hover:not(:disabled) {
+    border-color: var(--color-sage-900);
+    color: var(--color-sage-900);
+    background-color: transparent;
+  }
+  .btn-outline-sage:active:not(:disabled) {
+    background-color: var(--color-sage-100);
+  }
+
+  /* Ghost — no border, subtle hover */
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--text-primary);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    color: var(--brand-primary);
+  }
+
+  /* Destructive */
+  .btn-danger {
+    background-color: #ef4444;
+    color: #ffffff;
+  }
+  .btn-danger:hover:not(:disabled) {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+  }
+
+  /* Link style */
+  .btn-link {
+    background: none;
+    color: var(--brand-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    padding: 0;
+    height: auto;
+    border-radius: 2px;
+  }
+  .btn-link:hover:not(:disabled) {
+    color: var(--brand-primary-hover);
+  }
+
+  /* Full width */
+  .btn-full { width: 100%; }
+
+  /* Loading state */
+  .btn-loading {
+    position: relative;
+    pointer-events: none;
+    color: transparent;
+  }
+  .btn-loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 1.125rem;
+    height: 1.125rem;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin-slow 0.7s linear infinite;
+    color: white;
+  }
+}

@@ -1,14 +1,24 @@
-import { ImagesIcon } from '@sanity/icons'
+import { DocumentIcon, ImagesIcon } from '@sanity/icons'
 import type { StructureResolver } from 'sanity/structure'
 
 // Singleton document types — excluded from generic list to avoid duplicates.
 // Add singleton type names here as new page sections are created.
 const SINGLETONS: string[] = []
 
+const CUSTOM_LIST_ITEMS = ['page', 'collection']
+
 export const structure: StructureResolver = (S) =>
   S.list()
     .title('Content')
     .items([
+      // Pages (page builder)
+      S.listItem()
+        .title('Pages')
+        .icon(DocumentIcon)
+        .child(S.documentTypeList('page').title('Pages')),
+
+      S.divider(),
+
       // Collections (galleries, carousels)
       S.listItem()
         .title('Collections')
@@ -17,16 +27,10 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
-      // Page sections will appear here as the site is built out.
-      // Example pattern for a singleton:
-      //
-      // S.listItem()
-      //   .title('Home Page')
-      //   .icon(HomeIcon)
-      //   .child(S.document().schemaType('homePage').documentId('homePage')),
-
       // All remaining non-singleton types
       ...S.documentTypeListItems().filter(
-        (item) => !SINGLETONS.includes(item.getId() as string) && item.getId() !== 'collection',
+        (item) =>
+          !SINGLETONS.includes(item.getId() as string) &&
+          !CUSTOM_LIST_ITEMS.includes(item.getId() as string),
       ),
     ])

@@ -560,11 +560,11 @@ body {
   .heading-xs { font-size: 1.0625rem; font-weight: 600; line-height: 1.4; }
 
   /* Body text */
-  .body-xl { font-size: 1.25rem; line-height: 1.8; color: var(--text-secondary); }
-  .body-lg { font-size: 1.125rem; line-height: 1.75; color: var(--text-secondary); }
-  .body-md { font-size: 1rem;    line-height: 1.7;  color: var(--text-secondary); }
-  .body-sm { font-size: 0.875rem; line-height: 1.65; color: var(--text-secondary); }
-  .body-xs { font-size: 0.75rem;  line-height: 1.6;  color: var(--text-tertiary); }
+  .body-xl { font-size: 1.25rem; font-weight: 600; line-height: 1.8; color: var(--text-secondary); }
+  .body-lg { font-size: 1.125rem; font-weight: 600; line-height: 1.75; color: var(--text-secondary); }
+  .body-md { font-size: 1rem; font-weight: 600; line-height: 1.7; color: var(--text-secondary); }
+  .body-sm { font-size: 0.875rem; font-weight: 600; line-height: 1.65; color: var(--text-secondary); }
+  .body-xs { font-size: 0.75rem; font-weight: 600; line-height: 1.6; color: var(--text-tertiary); }
 
   /* Eyebrow / label text */
   .eyebrow {

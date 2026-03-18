@@ -19,9 +19,18 @@ const buttonFields = [
   defineField({
     name: 'url',
     title: 'URL',
-    type: 'url',
+    type: 'string',
+    description: 'Use a relative path for internal links (e.g. /about) or a full URL for external links.',
     validation: (rule) =>
-      rule.required().uri({ scheme: ['http', 'https', 'mailto', 'tel'] }),
+      rule.required().custom((value) => {
+        if (!value) return 'URL is required'
+        const isRelative = value.startsWith('/')
+        const isAbsolute = /^(https?|mailto|tel):/.test(value)
+        if (!isRelative && !isAbsolute) {
+          return 'Must be a relative path (e.g. /about) or a full URL (e.g. https://example.com)'
+        }
+        return true
+      }),
   }),
   defineField({
     name: 'variant',

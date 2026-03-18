@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
+import Button from '@/components/Button'
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'link'
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'outline-dark' | 'outline-white' | 'outline-sage' | 'ghost' | 'link'
 
 interface ButtonConfig {
   label: string
@@ -21,49 +22,38 @@ type ThemeConfig = {
   className?: string
   style?: CSSProperties
   isDark: boolean
+  outlineVariant: 'outline-dark' | 'outline-white' | 'outline-sage'
 }
 
 const themes: Record<string, ThemeConfig> = {
-  'surface':          { style: { background: 'var(--surface)' }, isDark: false },
-  'surface-sunken':   { style: { background: 'var(--surface-sunken)' }, isDark: false },
-  'gradient-bloom':   { className: 'gradient-bloom', isDark: false },
-  'gradient-sage':    { className: 'gradient-sage', isDark: false },
-  'gradient-fig':     { className: 'gradient-fig', isDark: false },
-  'gradient-violet':  { className: 'gradient-violet', isDark: false },
-  'sage-50':          { style: { background: 'var(--color-sage-50)' }, isDark: false },
-  'sage-500':         { style: { background: 'var(--color-sage-500)' }, isDark: false },
-  'fig-500':          { style: { background: 'var(--color-fig-500)' }, isDark: true },
-  'violet-50':        { style: { background: 'var(--color-violet-50)' }, isDark: false },
-  'violet-500':       { style: { background: 'var(--color-violet-500)' }, isDark: true },
-  'bloom-50':         { style: { background: 'var(--color-bloom-50)' }, isDark: false },
-  'bloom-500':        { style: { background: 'var(--color-bloom-500)' }, isDark: true },
+  'surface':          { style: { background: 'var(--surface)' }, isDark: false, outlineVariant: 'outline-dark' },
+  'surface-sunken':   { style: { background: 'var(--surface-sunken)' }, isDark: false, outlineVariant: 'outline-dark' },
+  'gradient-bloom':   { className: 'gradient-bloom', isDark: false, outlineVariant: 'outline-dark' },
+  'gradient-sage':    { className: 'gradient-sage', isDark: false, outlineVariant: 'outline-dark' },
+  'gradient-fig':     { className: 'gradient-fig', isDark: false, outlineVariant: 'outline-dark' },
+  'gradient-violet':  { className: 'gradient-violet', isDark: false, outlineVariant: 'outline-dark' },
+  'sage-50':          { style: { background: 'var(--color-sage-50)' }, isDark: false, outlineVariant: 'outline-dark' },
+  'sage-500':         { style: { background: 'var(--color-sage-500)' }, isDark: false, outlineVariant: 'outline-sage' },
+  'fig-500':          { style: { background: 'var(--color-fig-500)' }, isDark: true, outlineVariant: 'outline-white' },
+  'violet-50':        { style: { background: 'var(--color-violet-50)' }, isDark: false, outlineVariant: 'outline-dark' },
+  'violet-500':       { style: { background: 'var(--color-violet-500)' }, isDark: true, outlineVariant: 'outline-white' },
+  'bloom-50':         { style: { background: 'var(--color-bloom-50)' }, isDark: false, outlineVariant: 'outline-dark' },
+  'bloom-500':        { style: { background: 'var(--color-bloom-500)' }, isDark: true, outlineVariant: 'outline-white' },
 }
 
-function CtaButton({ config, isDark }: { config: ButtonConfig; isDark: boolean }) {
-  const target = config.openInNewTab ? '_blank' : undefined
-  const rel = config.openInNewTab ? 'noopener noreferrer' : undefined
-
-  // On dark backgrounds, outline/ghost buttons need a white border/text treatment
-  const variantClass =
-    isDark && config.variant === 'outline'
-      ? 'btn btn-md btn-outline'
-      : `btn btn-md btn-${config.variant}`
-
-  const darkOutlineStyle: CSSProperties =
-    isDark && config.variant === 'outline'
-      ? { borderColor: 'rgba(255,255,255,0.6)', color: 'inherit' }
-      : {}
+function CtaButton({ config, outlineVariant }: { config: ButtonConfig; outlineVariant: ThemeConfig['outlineVariant'] }) {
+  const resolvedVariant = config.variant === 'outline' ? outlineVariant : config.variant
 
   return (
-    <a
+    <Button
       href={config.url}
-      target={target}
-      rel={rel}
-      className={variantClass}
-      style={darkOutlineStyle}
+      variant={resolvedVariant}
+      size="md"
+      target={config.openInNewTab ? '_blank' : undefined}
+      rel={config.openInNewTab ? 'noopener noreferrer' : undefined}
     >
       {config.label}
-    </a>
+    </Button>
   )
 }
 
@@ -75,7 +65,7 @@ export function CtaBanner({
   secondaryButton,
 }: CtaBannerProps) {
   const config = themes[theme] ?? themes['surface']
-  const { className, style, isDark } = config
+  const { className, style, isDark, outlineVariant } = config
 
   const textColor: CSSProperties = isDark ? { color: '#ffffff' } : {}
 
@@ -101,8 +91,8 @@ export function CtaBanner({
         )}
         {(primaryButton || secondaryButton) && (
           <div className="flex flex-wrap justify-center gap-3">
-            {primaryButton && <CtaButton config={primaryButton} isDark={isDark} />}
-            {secondaryButton && <CtaButton config={secondaryButton} isDark={isDark} />}
+            {primaryButton && <CtaButton config={primaryButton} outlineVariant={outlineVariant} />}
+            {secondaryButton && <CtaButton config={secondaryButton} outlineVariant={outlineVariant} />}
           </div>
         )}
       </div>

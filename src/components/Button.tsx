@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import Link from "next/link";
 
-type ButtonVariant = "primary" | "secondary" | "outline" | "outline-dark" | "outline-white" | "outline-sage";
+export type ButtonVariant = "primary" | "secondary" | "outline" | "outline-dark" | "outline-white" | "outline-sage" | "ghost" | "link";
 type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 interface BaseProps {
@@ -38,6 +38,8 @@ const variantClasses: Record<ButtonVariant, string> = {
   "outline-dark": "btn-outline-dark",
   "outline-white": "btn-outline-white",
   "outline-sage": "btn-outline-sage",
+  ghost: "btn-ghost",
+  link: "btn-link",
 };
 
 export default function Button({

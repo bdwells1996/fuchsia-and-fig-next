@@ -1,7 +1,5 @@
 import type { CSSProperties } from 'react'
-import Button from '@/components/Button'
-
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'outline-dark' | 'outline-white' | 'outline-sage' | 'ghost' | 'link'
+import Button, { type ButtonVariant } from '@/components/Button'
 
 interface ButtonConfig {
   label: string

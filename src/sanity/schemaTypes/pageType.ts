@@ -27,6 +27,7 @@ export const pageType = defineType({
       of: [
         defineArrayMember({ type: 'heroSection' }),
         defineArrayMember({ type: 'ctaBanner' }),
+        defineArrayMember({ type: 'featuredItems' }),
       ],
     }),
   ],

@@ -19,6 +19,16 @@ export const PAGE_BY_SLUG_QUERY = `*[_type == "page" && slug.current == $slug][0
       image,
       alt,
       colSpan
+    },
+    // featuredItems fields
+    items[]{
+      _key,
+      image,
+      alt,
+      title,
+      body,
+      button,
+      alignment
     }
   }
 }`

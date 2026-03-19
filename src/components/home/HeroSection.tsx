@@ -1,5 +1,7 @@
 import { BentoGrid, type BentoItem } from "@/components/ui/BentoGrid";
+import { AnimatedBlock } from "@/components/motion/AnimatedBlock";
 import { urlFor } from "@/sanity/lib/image";
+import type { AnimationConfig } from "@/lib/animations/types";
 
 interface GridItem {
 	_key: string;
@@ -12,6 +14,8 @@ export interface HeroSectionProps {
 	tagline: string;
 	accentWord: string;
 	gridItems?: GridItem[];
+	titleAnimation?: AnimationConfig;
+	gridAnimation?: AnimationConfig;
 }
 
 function Tagline({
@@ -48,6 +52,8 @@ export function HeroSection({
 	tagline,
 	accentWord,
 	gridItems = [],
+	titleAnimation,
+	gridAnimation,
 }: HeroSectionProps) {
 	const items: BentoItem[] =
 		gridItems?.map((item) => ({
@@ -66,13 +72,15 @@ export function HeroSection({
 			}}
 		>
 			<div className="container-site mx-auto">
-				<h1
-					className="font-display text-4xl lg:text-6xl text-center mb-12"
-					style={{ color: "var(--color-fig-500)" }}
-				>
-					<Tagline tagline={tagline} accentWord={accentWord} />
-				</h1>
-				{items.length > 0 && <BentoGrid items={items} />}
+				<AnimatedBlock animation={titleAnimation}>
+					<h1
+						className="font-display text-4xl lg:text-6xl text-center mb-12"
+						style={{ color: "var(--color-fig-500)" }}
+					>
+						<Tagline tagline={tagline} accentWord={accentWord} />
+					</h1>
+				</AnimatedBlock>
+				{items.length > 0 && <BentoGrid items={items} animation={gridAnimation} />}
 			</div>
 		</section>
 	);

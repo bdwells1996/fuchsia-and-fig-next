@@ -1,4 +1,7 @@
 import Image from 'next/image'
+import type { AnimationConfig } from '@/lib/animations/types'
+import { AnimatedBlock } from '@/components/motion/AnimatedBlock'
+import { AnimatedItem } from '@/components/motion/AnimatedItem'
 
 export interface BentoItem {
   key: string
@@ -32,27 +35,58 @@ const imageSizes: Record<1 | 2 | 3, string> = {
 
 interface BentoGridProps {
   items: BentoItem[]
+  animation?: AnimationConfig
 }
 
-export function BentoGrid({ items }: BentoGridProps) {
+function BentoTileContent({ item }: { item: BentoItem }) {
   return (
+    <>
+      <div style={{ paddingBottom: spacerPadding[item.colSpan] }} />
+      <Image
+        src={item.image.url}
+        alt={item.alt}
+        fill
+        className="object-cover"
+        sizes={imageSizes[item.colSpan]}
+      />
+    </>
+  )
+}
+
+export function BentoGrid({ items, animation }: BentoGridProps) {
+  const useStagger = animation?.stagger
+
+  const gridContent = (
     <div className="grid grid-cols-1 min-[450px]:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
-      {items.map((item) => (
-        <div
-          key={item.key}
-          className={`relative overflow-hidden col-span-1 ${colSpanClass[item.colSpan]}`}
-          style={{ borderRadius: 'var(--radius-card)' }}
-        >
-          <div style={{ paddingBottom: spacerPadding[item.colSpan] }} />
-          <Image
-            src={item.image.url}
-            alt={item.alt}
-            fill
-            className="object-cover"
-            sizes={imageSizes[item.colSpan]}
-          />
-        </div>
-      ))}
+      {items.map((item) => {
+        const tileClass = `relative overflow-hidden col-span-1 ${colSpanClass[item.colSpan]}`
+        const tileStyle = { borderRadius: 'var(--radius-card)' }
+
+        if (useStagger) {
+          return (
+            <AnimatedItem
+              key={item.key}
+              animation={animation}
+              className={tileClass}
+              style={tileStyle}
+            >
+              <BentoTileContent item={item} />
+            </AnimatedItem>
+          )
+        }
+
+        return (
+          <div key={item.key} className={tileClass} style={tileStyle}>
+            <BentoTileContent item={item} />
+          </div>
+        )
+      })}
     </div>
   )
+
+  if (animation?.preset || useStagger) {
+    return <AnimatedBlock animation={animation}>{gridContent}</AnimatedBlock>
+  }
+
+  return gridContent
 }

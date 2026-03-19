@@ -1,5 +1,8 @@
 import type { CSSProperties } from "react";
 import Button, { type ButtonVariant } from "@/components/Button";
+import { AnimatedBlock } from "@/components/motion/AnimatedBlock";
+import { AnimatedItem } from "@/components/motion/AnimatedItem";
+import type { AnimationConfig } from "@/lib/animations/types";
 
 interface ButtonConfig {
 	label: string;
@@ -14,6 +17,7 @@ export interface CtaBannerProps {
 	theme?: string;
 	primaryButton?: ButtonConfig;
 	secondaryButton?: ButtonConfig;
+	animation?: AnimationConfig;
 }
 
 type ThemeConfig = {
@@ -120,55 +124,66 @@ export function CtaBanner({
 	theme = "surface",
 	primaryButton,
 	secondaryButton,
+	animation,
 }: CtaBannerProps) {
 	const config = themes[theme] ?? themes["surface"];
 	const { className, style, isDark, outlineVariant } = config;
 
 	const textColor: CSSProperties = isDark ? { color: "#ffffff" } : {};
 
+	const isStagger = animation?.stagger
+
 	return (
 		<section
-			className={`w-full py-14 px-4 lg:py-20 ${className ? ` ${className}` : ""}`}
+			className={`w-full py-14 px-4 lg:py-20${className ? ` ${className}` : ""}`}
 			style={{ ...style, ...textColor }}
 		>
+		<AnimatedBlock animation={animation} as="div">
 			<div className="container-narrow mx-auto text-center">
-				<h2
-					className="font-display text-5xl mb-4"
-					style={
-						isDark ? { color: "#ffffff" } : { color: "var(--color-fig-500)" }
-					}
-				>
-					{title}
-				</h2>
-				{description && (
-					<p
-						className="body-lg mb-6 max-w-prose mx-auto lg:mb-8"
+				<AnimatedItem animation={animation} enabled={isStagger}>
+					<h2
+						className="font-display text-5xl mb-4"
 						style={
-							isDark
-								? { color: "rgba(255,255,255,0.85)" }
-								: { color: "var(--text-secondary)" }
+							isDark ? { color: "#ffffff" } : { color: "var(--color-fig-500)" }
 						}
 					>
-						{description}
-					</p>
+						{title}
+					</h2>
+				</AnimatedItem>
+				{description && (
+					<AnimatedItem animation={animation} enabled={isStagger}>
+						<p
+							className="body-lg mb-6 max-w-prose mx-auto lg:mb-8"
+							style={
+								isDark
+									? { color: "rgba(255,255,255,0.85)" }
+									: { color: "var(--text-secondary)" }
+							}
+						>
+							{description}
+						</p>
+					</AnimatedItem>
 				)}
 				{(primaryButton || secondaryButton) && (
-					<div className="flex flex-wrap justify-center gap-3">
-						{primaryButton && (
-							<CtaButton
-								config={primaryButton}
-								outlineVariant={outlineVariant}
-							/>
-						)}
-						{secondaryButton && (
-							<CtaButton
-								config={secondaryButton}
-								outlineVariant={outlineVariant}
-							/>
-						)}
-					</div>
+					<AnimatedItem animation={animation} enabled={isStagger}>
+						<div className="flex flex-wrap justify-center gap-3">
+							{primaryButton && (
+								<CtaButton
+									config={primaryButton}
+									outlineVariant={outlineVariant}
+								/>
+							)}
+							{secondaryButton && (
+								<CtaButton
+									config={secondaryButton}
+									outlineVariant={outlineVariant}
+								/>
+							)}
+						</div>
+					</AnimatedItem>
 				)}
 			</div>
+		</AnimatedBlock>
 		</section>
 	);
 }

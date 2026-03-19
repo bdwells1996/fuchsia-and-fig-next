@@ -70,6 +70,18 @@ export const heroSectionType = defineType({
         }),
       ],
     }),
+    defineField({
+      name: 'titleAnimation',
+      title: 'Title Animation',
+      type: 'animationConfig',
+      description: 'Optional animation for the tagline heading.',
+    }),
+    defineField({
+      name: 'gridAnimation',
+      title: 'Grid Animation',
+      type: 'animationConfig',
+      description: 'Optional animation for the bento grid items. Enable stagger to cascade them in.',
+    }),
   ],
   preview: {
     select: {

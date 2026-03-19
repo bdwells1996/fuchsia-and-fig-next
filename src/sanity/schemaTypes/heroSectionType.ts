@@ -74,13 +74,15 @@ export const heroSectionType = defineType({
       name: 'titleAnimation',
       title: 'Title Animation',
       type: 'animationConfig',
-      description: 'Optional animation for the tagline heading.',
+      description:
+        'Optional entrance animation for the tagline heading. Leave unset for no animation.',
     }),
     defineField({
       name: 'gridAnimation',
       title: 'Grid Animation',
       type: 'animationConfig',
-      description: 'Optional animation for the bento grid items. Enable stagger to cascade them in.',
+      description:
+        'Optional entrance animation for the bento grid images. Enable "Stagger Children" to have images animate in one after another rather than all at once.',
     }),
   ],
   preview: {

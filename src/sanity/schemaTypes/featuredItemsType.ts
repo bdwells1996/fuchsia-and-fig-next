@@ -91,18 +91,6 @@ export const featuredItemsType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'titleAnimation',
-      title: 'Title Animation',
-      type: 'animationConfig',
-      description: 'Optional animation for the section title.',
-    }),
-    defineField({
-      name: 'itemAnimation',
-      title: 'Item Animation',
-      type: 'animationConfig',
-      description: 'Optional animation for each item. Enable stagger to cascade them in.',
-    }),
-    defineField({
       name: 'items',
       title: 'Items',
       type: 'array',
@@ -176,6 +164,20 @@ export const featuredItemsType = defineType({
           },
         }),
       ],
+    }),
+    defineField({
+      name: 'titleAnimation',
+      title: 'Title Animation',
+      type: 'animationConfig',
+      description:
+        'Optional entrance animation for the section heading. Leave unset for no animation.',
+    }),
+    defineField({
+      name: 'itemAnimation',
+      title: 'Item Animation',
+      type: 'animationConfig',
+      description:
+        'Optional entrance animation for the featured items. Enable "Stagger Children" to have items animate in one after another rather than all at once.',
     }),
   ],
   preview: {

@@ -106,7 +106,8 @@ export const ctaBannerType = defineType({
       name: 'animation',
       title: 'Animation',
       type: 'animationConfig',
-      description: 'Optional animation for this banner.',
+      description:
+        'Optional entrance animation for this banner. Leave unset for no animation.',
     }),
   ],
   preview: {

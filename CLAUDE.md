@@ -70,3 +70,9 @@ Storybook uses the `@storybook/nextjs` framework. The preview (``.storybook/prev
 - **Linting**: ESLint with flat config (`eslint.config.mjs`) + Biome (`biome.json` if present)
 - **Styling**: Tailwind CSS v4 via PostCSS — no `tailwind.config` file; configuration is in CSS
 - **No test framework** is configured
+
+---
+
+## Schema authoring guidelines
+
+@docs/schema-guidelines.md

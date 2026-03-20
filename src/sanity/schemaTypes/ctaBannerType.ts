@@ -102,6 +102,13 @@ export const ctaBannerType = defineType({
       type: 'object',
       fields: buttonFields,
     }),
+    defineField({
+      name: 'animation',
+      title: 'Animation',
+      type: 'animationConfig',
+      description:
+        'Optional entrance animation for this banner. Leave unset for no animation.',
+    }),
   ],
   preview: {
     select: {

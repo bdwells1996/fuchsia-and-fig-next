@@ -70,6 +70,20 @@ export const heroSectionType = defineType({
         }),
       ],
     }),
+    defineField({
+      name: 'titleAnimation',
+      title: 'Title Animation',
+      type: 'animationConfig',
+      description:
+        'Optional entrance animation for the tagline heading. Leave unset for no animation.',
+    }),
+    defineField({
+      name: 'gridAnimation',
+      title: 'Grid Animation',
+      type: 'animationConfig',
+      description:
+        'Optional entrance animation for the bento grid images. Enable "Stagger Children" to have images animate in one after another rather than all at once.',
+    }),
   ],
   preview: {
     select: {

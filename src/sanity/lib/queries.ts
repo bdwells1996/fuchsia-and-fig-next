@@ -1,3 +1,13 @@
+const animationFields = `
+  preset,
+  duration,
+  delay,
+  easing,
+  threshold,
+  stagger,
+  staggerDelay
+`
+
 export const PAGE_BY_SLUG_QUERY = `*[_type == "page" && slug.current == $slug][0]{
   _id,
   title,
@@ -11,9 +21,12 @@ export const PAGE_BY_SLUG_QUERY = `*[_type == "page" && slug.current == $slug][0
     theme,
     primaryButton,
     secondaryButton,
+    animation{ ${animationFields} },
     // heroSection fields
     tagline,
     accentWord,
+    titleAnimation{ ${animationFields} },
+    gridAnimation{ ${animationFields} },
     gridItems[]{
       _key,
       image,
@@ -21,6 +34,7 @@ export const PAGE_BY_SLUG_QUERY = `*[_type == "page" && slug.current == $slug][0
       colSpan
     },
     // featuredItems fields
+    itemAnimation{ ${animationFields} },
     items[]{
       _key,
       image,

@@ -1,6 +1,9 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import Button, { type ButtonVariant } from "@/components/Button";
+import { AnimatedBlock } from "@/components/motion/AnimatedBlock";
+import { AnimatedItem } from "@/components/motion/AnimatedItem";
+import type { AnimationConfig } from "@/lib/animations/types";
 import { urlFor } from "@/sanity/lib/image";
 
 // ─── Theme system (mirrors CtaBanner) ────────────────────────────────────────
@@ -105,6 +108,8 @@ export interface FeaturedItemsProps {
 	accentWord?: string;
 	theme?: string;
 	items?: FeaturedItemData[];
+	titleAnimation?: AnimationConfig;
+	itemAnimation?: AnimationConfig;
 }
 
 // ─── Title ────────────────────────────────────────────────────────────────────
@@ -222,6 +227,8 @@ export function FeaturedItems({
 	accentWord,
 	theme = "surface",
 	items = [],
+	titleAnimation,
+	itemAnimation,
 }: FeaturedItemsProps) {
 	if (items.length === 0) return null;
 
@@ -235,18 +242,35 @@ export function FeaturedItems({
 		>
 			<div className="container-site mx-auto space-y-16 lg:space-y-18">
 				{title && (
-					<h2 className="font-display text-5xl text-center mb-12 lg:mb-16">
-						<SectionTitle title={title} accentWord={accentWord} isDark={isDark} />
-					</h2>
+					<AnimatedBlock animation={titleAnimation}>
+						<h2 className="font-display text-5xl text-center mb-12 lg:mb-16">
+							<SectionTitle title={title} accentWord={accentWord} isDark={isDark} />
+						</h2>
+					</AnimatedBlock>
 				)}
-				{items.map((item) => (
-					<FeaturedItem
-						key={item._key}
-						item={item}
-						isDark={isDark}
-						outlineVariant={outlineVariant}
-					/>
-				))}
+				<AnimatedBlock animation={itemAnimation}>
+					{items.map((item) => {
+						if (itemAnimation?.stagger) {
+							return (
+								<AnimatedItem key={item._key} animation={itemAnimation}>
+									<FeaturedItem
+										item={item}
+										isDark={isDark}
+										outlineVariant={outlineVariant}
+									/>
+								</AnimatedItem>
+							)
+						}
+						return (
+							<FeaturedItem
+								key={item._key}
+								item={item}
+								isDark={isDark}
+								outlineVariant={outlineVariant}
+							/>
+						)
+					})}
+				</AnimatedBlock>
 			</div>
 		</section>
 	);

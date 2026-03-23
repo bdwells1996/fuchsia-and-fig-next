@@ -25,13 +25,6 @@ const speedMap: Record<
 type SizeToken = "sm" | "md" | "lg" | "xl" | "2xl";
 type WeightToken = "light" | "regular" | "bold";
 
-const sizeValues: Record<SizeToken, string> = {
-	sm: "0.75rem",
-	md: "1.1rem",
-	lg: "1.6rem",
-	xl: "2.25rem",
-	"2xl": "3.25rem",
-};
 
 const weightValues: Record<WeightToken, number> = {
 	light: 300,
@@ -43,8 +36,6 @@ const config = {
 	rows: 2,
 	sizes: ["xl", "2xl", "xl", "2xl"] as SizeToken[],
 	weights: ["light", "regular"] as WeightToken[],
-	rowGap: "1rem",
-	wordGap: "3rem",
 };
 
 // Deterministic pseudo-random from word + index so sizes are stable on SSR
@@ -81,6 +72,13 @@ function distributeToRows(
 	});
 }
 
+const maskStyle: CSSProperties = {
+	WebkitMaskImage:
+		"linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
+	maskImage:
+		"linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
+};
+
 const keyframesCSS = `
 @keyframes wc-scroll-left {
   from { transform: translateX(0); }
@@ -88,6 +86,18 @@ const keyframesCSS = `
 }
 @media (prefers-reduced-motion: reduce) {
   .wc-row { animation: none !important; }
+}
+.wc-sm   { font-size: 0.65rem; }
+.wc-md   { font-size: 0.85rem; }
+.wc-lg   { font-size: 1.1rem;  }
+.wc-xl   { font-size: 1.4rem;  }
+.wc-2xl  { font-size: 1.9rem;  }
+@media (min-width: 768px) {
+  .wc-sm   { font-size: 0.75rem; }
+  .wc-md   { font-size: 1.1rem;  }
+  .wc-lg   { font-size: 1.6rem;  }
+  .wc-xl   { font-size: 2.25rem; }
+  .wc-2xl  { font-size: 3.25rem; }
 }
 `;
 
@@ -104,21 +114,12 @@ export function InfiniteScrollWordCloud({
 	const enriched = enrichWords(words);
 	const rows = distributeToRows(enriched, numRows);
 
-	const sectionStyle: CSSProperties = {
-		padding: `${config.rowGap} 0`,
-		gap: config.rowGap,
-		WebkitMaskImage:
-			"linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
-		maskImage:
-			"linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
-	};
-
 	return (
 		<>
 			<style>{keyframesCSS}</style>
 			<section
-				className={`relative overflow-hidden w-full flex flex-col${theme ? ` ${theme}` : ""}`}
-				style={sectionStyle}
+				className={`relative overflow-hidden w-full flex flex-col py-2 gap-2 md:py-4 md:gap-4${theme ? ` ${theme}` : ""}`}
+				style={maskStyle}
 			>
 				{rows.map((rowWords, rowIndex) => {
 					// Alternate direction per row, and vary speed slightly
@@ -138,7 +139,6 @@ export function InfiniteScrollWordCloud({
 					const delay = -(rowIndex * ((baseDuration * REPEATS) / numRows));
 
 					const rowStyle: CSSProperties = {
-						gap: config.wordGap,
 						animationName: "wc-scroll-left",
 						animationDuration: `${duration}s`,
 						animationTimingFunction: "linear",
@@ -150,17 +150,14 @@ export function InfiniteScrollWordCloud({
 					return (
 						<section
 							key={rowIndex}
-							className="wc-row flex flex-row w-max will-change-transform"
+							className="wc-row flex flex-row gap-6 md:gap-12 w-max will-change-transform"
 							style={rowStyle}
 						>
 							{duped.map((entry, wordIndex) => (
 								<span
 									key={wordIndex}
-									className="leading-[1.3] whitespace-nowrap select-none text-[var(--text-body)]"
-									style={{
-										fontSize: sizeValues[entry.size],
-										fontWeight: weightValues[entry.weight],
-									}}
+									className={`wc-${entry.size} leading-[1.3] whitespace-nowrap select-none text-(--text-body)`}
+									style={{ fontWeight: weightValues[entry.weight] }}
 								>
 									{entry.word}
 								</span>

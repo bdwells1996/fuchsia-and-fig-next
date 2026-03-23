@@ -1,3 +1,4 @@
+import { ArtistBioSpotlight, type ArtistBioSpotlightProps } from '@/components/ArtistBioSpotlight/ArtistBioSpotlight'
 import { CtaBanner, type CtaBannerProps } from './CtaBanner'
 import { FeaturedItems, type FeaturedItemsProps } from './FeaturedItems'
 import { HeroSection, type HeroSectionProps } from '@/components/home/HeroSection'
@@ -16,6 +17,8 @@ export function BlockRenderer({ block }: { block: Block }) {
       return <CtaBanner {...(block as unknown as CtaBannerProps)} />
     case 'featuredItems':
       return <FeaturedItems {...(block as unknown as FeaturedItemsProps)} />
+    case 'artistBioSpotlight':
+      return <ArtistBioSpotlight {...(block as unknown as ArtistBioSpotlightProps)} />
     default:
       return null
   }

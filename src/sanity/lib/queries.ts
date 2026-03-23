@@ -43,6 +43,14 @@ export const PAGE_BY_SLUG_QUERY = `*[_type == "page" && slug.current == $slug][0
       body,
       button,
       alignment
-    }
+    },
+    // artistBioSpotlight fields
+    image,
+    excerpt,
+    ctaButton,
+    imagePosition,
+    alignment,
+    imageAnimation{ ${animationFields} },
+    textAnimation{ ${animationFields} }
   }
 }`

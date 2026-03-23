@@ -51,6 +51,12 @@ export const PAGE_BY_SLUG_QUERY = `*[_type == "page" && slug.current == $slug][0
     imagePosition,
     alignment,
     imageAnimation{ ${animationFields} },
-    textAnimation{ ${animationFields} }
+    textAnimation{ ${animationFields} },
+    // wordCloudCta fields
+    words[]{ word },
+    title,
+    ctaLabel,
+    ctaHref,
+    speed
   }
 }`

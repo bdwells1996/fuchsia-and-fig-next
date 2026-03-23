@@ -36,7 +36,7 @@ export function WordCloudCta({
 			</div>
 			<div className="flex flex-col items-center gap-6 px-8 py-10 text-center md:py-12 md:gap-10">
 				<h2
-					className="font-display text-(--text-primary) leading-[1.15] m-0"
+					className="font-display text-primary leading-[1.15] m-0"
 					style={titleStyle}
 				>
 					{title}

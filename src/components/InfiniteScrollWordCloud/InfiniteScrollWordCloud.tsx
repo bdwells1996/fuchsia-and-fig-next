@@ -70,14 +70,15 @@ function enrichWords(words: WordEntry[]): EnrichedWord[] {
 	});
 }
 
-// Split words across rows by round-robin
+// Give each row the full word list, rotated by a per-row offset so rows feel distinct
 function distributeToRows(
 	words: EnrichedWord[],
 	numRows: number,
 ): EnrichedWord[][] {
-	const rows: EnrichedWord[][] = Array.from({ length: numRows }, () => []);
-	words.forEach((w, i) => rows[i % numRows].push(w));
-	return rows;
+	return Array.from({ length: numRows }, (_, rowIndex) => {
+		const offset = Math.floor((rowIndex * words.length) / numRows);
+		return [...words.slice(offset), ...words.slice(0, offset)];
+	});
 }
 
 const keyframesCSS = `

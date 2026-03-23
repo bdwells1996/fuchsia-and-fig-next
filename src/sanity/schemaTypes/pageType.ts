@@ -28,6 +28,7 @@ export const pageType = defineType({
         defineArrayMember({ type: 'heroSection' }),
         defineArrayMember({ type: 'ctaBanner' }),
         defineArrayMember({ type: 'featuredItems' }),
+        defineArrayMember({ type: 'artistBioSpotlight' }),
       ],
     }),
   ],

@@ -725,7 +725,8 @@ body {
   .prose-brand {
     max-width: 68ch;
     line-height: 1.75;
-    color: var(--text-secondary);
+    color: var(--text-primary);
+    font-weight: 500;
   }
   .prose-brand h1,
   .prose-brand h2,

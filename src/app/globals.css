@@ -809,6 +809,26 @@ body {
     animation: shimmer 1.5s linear infinite;
   }
 
+  .skeleton-fuchsia {
+    background-color: #f2e5f6; /* violet-100 */
+    border-radius: 0.375rem;
+    overflow: hidden;
+    position: relative;
+  }
+  .skeleton-fuchsia::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      #dbbfe8 50%, /* violet-200 */
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s linear infinite;
+  }
+
   /* ==========================================
      TOOLTIP (CSS-only)
   ========================================== */

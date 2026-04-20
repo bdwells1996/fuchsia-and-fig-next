@@ -1,4 +1,3 @@
-import Nav from "@/components/Nav";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import { getZettleProducts } from "@/lib/zettle";
 import type { Product } from "@/lib/zettle";
@@ -51,9 +50,7 @@ async function ShopContent() {
 
 export default function ShopPage() {
 	return (
-		<div className="min-h-screen bg-background">
-			<Nav />
-
+		<>
 			{/* Page header */}
 			<section
 				className="surface-sunken border-b"
@@ -74,6 +71,6 @@ export default function ShopPage() {
 
 			{/* Products */}
 			<ShopContent />
-		</div>
+		</>
 	);
 }

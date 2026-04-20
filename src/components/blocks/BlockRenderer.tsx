@@ -1,4 +1,5 @@
 import { ArtistBioSpotlight, type ArtistBioSpotlightProps } from '@/components/ArtistBioSpotlight/ArtistBioSpotlight'
+import { WordCloudCta, type WordCloudCtaProps } from '@/components/InfiniteScrollWordCloud/WordCloudCta'
 import { CtaBanner, type CtaBannerProps } from './CtaBanner'
 import { FeaturedItems, type FeaturedItemsProps } from './FeaturedItems'
 import { HeroSection, type HeroSectionProps } from '@/components/home/HeroSection'
@@ -19,6 +20,8 @@ export function BlockRenderer({ block }: { block: Block }) {
       return <FeaturedItems {...(block as unknown as FeaturedItemsProps)} />
     case 'artistBioSpotlight':
       return <ArtistBioSpotlight {...(block as unknown as ArtistBioSpotlightProps)} />
+    case 'wordCloudCta':
+      return <WordCloudCta {...(block as unknown as WordCloudCtaProps)} />
     default:
       return null
   }

@@ -48,7 +48,7 @@ async function ShopContent() {
 	);
 }
 
-export default function ShopPage() {
+export default async function ShopPage() {
 	return (
 		<>
 			{/* Page header */}

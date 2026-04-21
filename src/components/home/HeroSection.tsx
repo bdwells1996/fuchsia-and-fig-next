@@ -65,7 +65,7 @@ export function HeroSection({
 
 	return (
 		<section
-			className="w-full px-4 py-16 lg:px-8"
+			className="w-full px-4 py-14 lg:px-8"
 			style={{
 				background:
 					"linear-gradient(to bottom, var(--color-sage-50), var(--color-sage-200))",

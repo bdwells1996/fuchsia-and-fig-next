@@ -3,6 +3,7 @@ import { SanityLive } from "@/sanity/lib/live";
 import { VisualEditing } from "next-sanity/visual-editing";
 import { draftMode } from "next/headers";
 import { Quicksand, Geist_Mono, Abril_Fatface } from "next/font/google";
+import { CartProvider } from "@/components/Cart/CartProvider";
 import "./globals.css";
 
 const quicksand = Quicksand({
@@ -39,7 +40,9 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${quicksand.variable} ${geistMono.variable} ${abrilFatface.variable}`}>
       <body className="antialiased">
-        {children}
+        <CartProvider>
+          {children}
+        </CartProvider>
         {isDraftMode ? <VisualEditing /> : <SanityLive />}
       </body>
     </html>

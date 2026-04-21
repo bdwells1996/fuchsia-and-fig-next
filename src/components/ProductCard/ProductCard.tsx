@@ -1,12 +1,17 @@
+"use client";
+
 import Image from "next/image";
 import type { Product } from "@/lib/zettle";
 import { formatPrice } from "@/lib/zettle";
+import { useCart } from "@/components/Cart/useCart";
+import QuantityControl from "@/components/Cart/QuantityControl";
 
 interface ProductCardProps {
 	product: Product;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+	const { addItem, increment, decrement, getQuantity } = useCart();
 	const firstVariant = product.variants[0] ?? null;
 	const isOutOfStock = false; // Zettle free tier doesn't expose stock; placeholder for future
 
@@ -14,6 +19,9 @@ export default function ProductCard({ product }: ProductCardProps) {
 		firstVariant?.price != null
 			? formatPrice(firstVariant.price, firstVariant.currency)
 			: null;
+
+	const quantity = getQuantity(product.id);
+	const inCart = quantity > 0;
 
 	return (
 		<article className="card card-hover flex flex-col h-full">
@@ -58,14 +66,33 @@ export default function ProductCard({ product }: ProductCardProps) {
 					</p>
 				)}
 
-				{displayPrice && (
-					<p
-						className="font-sans font-bold text-lg mt-auto pt-2"
-						style={{ color: "var(--text-primary)" }}
-					>
-						{displayPrice}
-					</p>
-				)}
+				<div className="flex items-center justify-between mt-auto pt-2 gap-3">
+					{displayPrice && (
+						<p
+							className="font-sans font-bold text-lg"
+							style={{ color: "var(--text-primary)" }}
+						>
+							{displayPrice}
+						</p>
+					)}
+
+					{inCart ? (
+						<QuantityControl
+							quantity={quantity}
+							onIncrement={() => increment(product.id)}
+							onDecrement={() => decrement(product.id)}
+						/>
+					) : (
+						<button
+							type="button"
+							onClick={() => addItem(product.id)}
+							className="btn btn-primary btn-sm"
+							disabled={isOutOfStock}
+						>
+							Add to cart
+						</button>
+					)}
+				</div>
 			</div>
 		</article>
 	);

@@ -65,7 +65,7 @@ export function HeroSection({
 
 	return (
 		<section
-			className="w-full px-4 py-16 lg:px-8"
+			className="w-full px-4 py-14 lg:px-8"
 			style={{
 				background:
 					"linear-gradient(to bottom, var(--color-sage-50), var(--color-sage-200))",
@@ -74,13 +74,15 @@ export function HeroSection({
 			<div className="container-site mx-auto">
 				<AnimatedBlock animation={titleAnimation}>
 					<h1
-						className="font-display text-4xl lg:text-6xl text-center mb-12"
+						className="font-display text-5xl lg:text-6xl text-center mb-12"
 						style={{ color: "var(--color-fig-500)" }}
 					>
 						<Tagline tagline={tagline} accentWord={accentWord} />
 					</h1>
 				</AnimatedBlock>
-				{items.length > 0 && <BentoGrid items={items} animation={gridAnimation} />}
+				{items.length > 0 && (
+					<BentoGrid items={items} animation={gridAnimation} />
+				)}
 			</div>
 		</section>
 	);

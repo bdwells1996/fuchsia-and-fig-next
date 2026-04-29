@@ -5,14 +5,19 @@ import type { Product } from "@/lib/zettle";
 import { formatPrice } from "@/lib/zettle";
 import { useCart } from "@/components/Cart/useCart";
 import QuantityControl from "@/components/Cart/QuantityControl";
-import Link from "next/link";
-import { ViewTransition } from "react";
+import { ViewTransition, useTransition, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
 	product: Product;
 }
 
+const SKELETON_DELAY_MS = 600;
+
 export default function ProductCard({ product }: ProductCardProps) {
+	const router = useRouter();
+	const [isPending, startTransition] = useTransition();
+	const [showSkeleton, setShowSkeleton] = useState(false);
 	const { addItem, increment, decrement, getQuantity } = useCart();
 	const firstVariant = product.variants[0] ?? null;
 	const isOutOfStock = false; // Zettle free tier doesn't expose stock; placeholder for future
@@ -25,11 +30,28 @@ export default function ProductCard({ product }: ProductCardProps) {
 	const quantity = getQuantity(product.id);
 	const inCart = quantity > 0;
 
+	useEffect(() => {
+		if (!isPending) {
+			setShowSkeleton(false);
+			return;
+		}
+		const timer = setTimeout(() => setShowSkeleton(true), SKELETON_DELAY_MS);
+		return () => clearTimeout(timer);
+	}, [isPending]);
+
+	function handleNavigate() {
+		startTransition(() => {
+			router.push(`/shop/${product.id}`);
+		});
+	}
+
 	return (
-		<Link href={`/shop/${product.id}`}>
-			<article className="card card-hover flex flex-col h-full">
+		// biome-ignore lint/a11y/useKeyWithClickEvents: card acts as a link; focusable children handle keyboard
+		// biome-ignore lint/a11y/noStaticElementInteractions: same
+		<div onClick={handleNavigate} className="cursor-pointer">
+			<article className="card card-hover flex flex-col h-full relative">
 				{/* Image */}
-				<div className="relative aspect-square overflow-hidden rounded-t-[var(--radius-card)]">
+				<div className="relative aspect-square overflow-hidden rounded-t-card">
 					{product.imageUrl ? (
 						<ViewTransition name={`product-image-${product.id}`}>
 							<Image
@@ -83,9 +105,9 @@ export default function ProductCard({ product }: ProductCardProps) {
 							</p>
 						)}
 
-						{/* biome-ignore lint/a11y/useKeyWithClickEvents: stops link navigation from bubbling through cart controls */}
+						{/* biome-ignore lint/a11y/useKeyWithClickEvents: stops card navigation from bubbling through cart controls */}
 						{/* biome-ignore lint/a11y/noStaticElementInteractions: same */}
-						<div onClick={(e) => e.preventDefault()}>
+						<div onClick={(e) => e.stopPropagation()}>
 							{inCart ? (
 								<QuantityControl
 									quantity={quantity}
@@ -105,7 +127,19 @@ export default function ProductCard({ product }: ProductCardProps) {
 						</div>
 					</div>
 				</div>
+
+				{/* Skeleton overlay — shown after a short delay if navigation is still pending */}
+				{showSkeleton && (
+					<div className="absolute inset-0 rounded-card overflow-hidden animate-fade-in bg-surface">
+						<div className="skeleton-fuchsia w-full aspect-square" />
+						<div className="card-body flex flex-col gap-3">
+							<div className="skeleton-fuchsia h-4 w-3/4 rounded" />
+							<div className="skeleton-fuchsia h-3 w-full rounded" />
+							<div className="skeleton-fuchsia h-3 w-5/6 rounded" />
+						</div>
+					</div>
+				)}
 			</article>
-		</Link>
+		</div>
 	);
 }

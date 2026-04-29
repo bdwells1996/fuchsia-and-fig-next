@@ -30,10 +30,7 @@ function Tagline({
 	return (
 		<>
 			{tagline.slice(0, idx)}
-			<span
-				className="relative inline-block"
-				style={{ color: "var(--color-bloom-500)" }}
-			>
+			<span className="relative inline-block text-bloom-500">
 				{accentWord}
 				<svg
 					aria-hidden="true"
@@ -65,7 +62,7 @@ export function HeroSection({
 
 	return (
 		<section
-			className="w-full px-4 py-14 lg:px-8"
+			className="w-full px-4 pb-14 pt-12 lg:px-8"
 			style={{
 				background:
 					"linear-gradient(to bottom, var(--color-sage-50), var(--color-sage-200))",
@@ -73,10 +70,7 @@ export function HeroSection({
 		>
 			<div className="container-site mx-auto">
 				<AnimatedBlock animation={titleAnimation}>
-					<h1
-						className="font-display text-5xl lg:text-6xl text-center mb-12"
-						style={{ color: "var(--color-fig-500)" }}
-					>
+					<h1 className="font-display text-fig-500 text-5xl lg:text-6xl text-center mb-12">
 						<Tagline tagline={tagline} accentWord={accentWord} />
 					</h1>
 				</AnimatedBlock>

@@ -5,6 +5,8 @@ import type { Product } from "@/lib/zettle";
 import { formatPrice } from "@/lib/zettle";
 import { useCart } from "@/components/Cart/useCart";
 import QuantityControl from "@/components/Cart/QuantityControl";
+import Link from "next/link";
+import { ViewTransition } from "react";
 
 interface ProductCardProps {
 	product: Product;
@@ -24,76 +26,86 @@ export default function ProductCard({ product }: ProductCardProps) {
 	const inCart = quantity > 0;
 
 	return (
-		<article className="card card-hover flex flex-col h-full">
-			{/* Image */}
-			<div className="relative aspect-square overflow-hidden rounded-t-[var(--radius-card)]">
-				{product.imageUrl ? (
-					<Image
-						src={product.imageUrl}
-						alt={product.name}
-						fill
-						className="object-cover"
-						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-					/>
-				) : (
-					<div className="w-full h-full surface-sunken flex items-center justify-center">
-						<span className="text-4xl opacity-30">🛍</span>
-					</div>
-				)}
+		<Link href={`/shop/${product.id}`}>
+			<article className="card card-hover flex flex-col h-full">
+				{/* Image */}
+				<div className="relative aspect-square overflow-hidden rounded-t-[var(--radius-card)]">
+					{product.imageUrl ? (
+						<ViewTransition name={`product-image-${product.id}`}>
+							<Image
+								src={product.imageUrl}
+								alt={product.name}
+								fill
+								className="object-cover"
+								sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+							/>
+						</ViewTransition>
+					) : (
+						<ViewTransition name={`product-image-${product.id}`}>
+							<div className="w-full h-full surface-sunken flex items-center justify-center">
+								<span className="text-4xl opacity-30">🛍</span>
+							</div>
+						</ViewTransition>
+					)}
 
-				{isOutOfStock && (
-					<span className="badge badge-neutral absolute top-3 left-3">
-						Out of stock
-					</span>
-				)}
-			</div>
+					{isOutOfStock && (
+						<span className="badge badge-neutral absolute top-3 left-3">
+							Out of stock
+						</span>
+					)}
+				</div>
 
-			{/* Body */}
-			<div className="card-body flex flex-col flex-1 gap-2">
-				<h3
-					className="font-sans font-semibold text-base leading-snug"
-					style={{ color: "var(--text-primary)" }}
-				>
-					{product.name}
-				</h3>
-
-				{product.description && (
-					<p
-						className="text-sm leading-relaxed line-clamp-3 flex-1"
-						style={{ color: "var(--text-secondary)" }}
+				{/* Body */}
+				<div className="card-body flex flex-col flex-1 gap-2">
+					<h3
+						className="font-sans font-semibold text-base leading-snug"
+						style={{ color: "var(--text-primary)" }}
 					>
-						{product.description}
-					</p>
-				)}
+						{product.name}
+					</h3>
 
-				<div className="flex items-center justify-between mt-auto pt-2 gap-3">
-					{displayPrice && (
+					{product.description && (
 						<p
-							className="font-sans font-bold text-lg"
-							style={{ color: "var(--text-primary)" }}
+							className="text-sm leading-relaxed line-clamp-3 flex-1"
+							style={{ color: "var(--text-secondary)" }}
 						>
-							{displayPrice}
+							{product.description}
 						</p>
 					)}
 
-					{inCart ? (
-						<QuantityControl
-							quantity={quantity}
-							onIncrement={() => increment(product.id)}
-							onDecrement={() => decrement(product.id)}
-						/>
-					) : (
-						<button
-							type="button"
-							onClick={() => addItem(product.id)}
-							className="btn btn-primary btn-sm"
-							disabled={isOutOfStock}
-						>
-							Add to cart
-						</button>
-					)}
+					<div className="flex items-center justify-between mt-auto pt-2 gap-3">
+						{displayPrice && (
+							<p
+								className="font-sans font-bold text-lg"
+								style={{ color: "var(--text-primary)" }}
+							>
+								{displayPrice}
+							</p>
+						)}
+
+						{/* biome-ignore lint/a11y/useKeyWithClickEvents: stops link navigation from bubbling through cart controls */}
+						{/* biome-ignore lint/a11y/noStaticElementInteractions: same */}
+						<div onClick={(e) => e.preventDefault()}>
+							{inCart ? (
+								<QuantityControl
+									quantity={quantity}
+									onIncrement={() => increment(product.id)}
+									onDecrement={() => decrement(product.id)}
+								/>
+							) : (
+								<button
+									type="button"
+									onClick={() => addItem(product.id)}
+									className="btn btn-primary btn-sm"
+									disabled={isOutOfStock}
+								>
+									Add to cart
+								</button>
+							)}
+						</div>
+					</div>
 				</div>
-			</div>
-		</article>
+			</article>
+		</Link>
 	);
 }

@@ -240,15 +240,22 @@ export function FeaturedItems({
 			className={`w-full py-16 lg:py-20 ${className ? ` ${className}` : ""}`}
 			style={style}
 		>
-			<div className="container-site mx-auto space-y-16 lg:space-y-18">
+			<div className="container-site mx-auto space-y-14 lg:space-y-18">
 				{title && (
 					<AnimatedBlock animation={titleAnimation}>
 						<h2 className="font-display text-5xl text-center mb-12 lg:mb-16">
-							<SectionTitle title={title} accentWord={accentWord} isDark={isDark} />
+							<SectionTitle
+								title={title}
+								accentWord={accentWord}
+								isDark={isDark}
+							/>
 						</h2>
 					</AnimatedBlock>
 				)}
-				<AnimatedBlock animation={itemAnimation}>
+				<AnimatedBlock
+					animation={itemAnimation}
+					className="flex flex-col gap-10 md:gap-12"
+				>
 					{items.map((item) => {
 						if (itemAnimation?.stagger) {
 							return (
@@ -259,7 +266,7 @@ export function FeaturedItems({
 										outlineVariant={outlineVariant}
 									/>
 								</AnimatedItem>
-							)
+							);
 						}
 						return (
 							<FeaturedItem
@@ -268,7 +275,7 @@ export function FeaturedItems({
 								isDark={isDark}
 								outlineVariant={outlineVariant}
 							/>
-						)
+						);
 					})}
 				</AnimatedBlock>
 			</div>

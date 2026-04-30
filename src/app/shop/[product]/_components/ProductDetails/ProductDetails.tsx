@@ -41,7 +41,7 @@ export function ProductDetails({ product }: { product: Product }) {
 				<h1 className="text-3xl font-display md:text-4xl lg:text-5xl">
 					{product.name}
 				</h1>
-				<p className="mt-4 overflow-y-auto max-h-80 md:max-h-65 md:mb-4 lg:max-h-120">
+				<p className="mt-4 overflow-y-auto prose-brand max-h-80 md:max-h-65 md:mb-4 lg:max-h-120">
 					{product.description ||
 						"No description available. Please check back soon!"}
 				</p>

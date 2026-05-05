@@ -7,6 +7,7 @@ import { useCart } from "@/components/Cart/useCart";
 import QuantityControl from "@/components/Cart/QuantityControl";
 import { ViewTransition, useTransition, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Select } from "@/components/Select/Select";
 
 interface ProductCardProps {
 	product: Product;
@@ -19,15 +20,23 @@ export default function ProductCard({ product }: ProductCardProps) {
 	const [isPending, startTransition] = useTransition();
 	const [showSkeleton, setShowSkeleton] = useState(false);
 	const { addItem, increment, decrement, getQuantity } = useCart();
-	const firstVariant = product.variants[0] ?? null;
 	const isOutOfStock = false; // Zettle free tier doesn't expose stock; placeholder for future
 
+	const firstVariant = product.variants[0] ?? null;
+	const hasMultipleVariants = product.variants.length > 1;
+	const [selectedVariantId, setSelectedVariantId] = useState(
+		firstVariant?.id ?? "",
+	);
+
+	const selectedVariant =
+		product.variants.find((v) => v.id === selectedVariantId) ?? firstVariant;
+
 	const displayPrice =
-		firstVariant?.price != null
-			? formatPrice(firstVariant.price, firstVariant.currency)
+		selectedVariant?.price != null
+			? formatPrice(selectedVariant.price, selectedVariant.currency)
 			: null;
 
-	const quantity = getQuantity(product.id);
+	const quantity = getQuantity(product.id, selectedVariantId);
 	const inCart = quantity > 0;
 
 	useEffect(() => {
@@ -95,29 +104,46 @@ export default function ProductCard({ product }: ProductCardProps) {
 						</p>
 					)}
 
-					<div className="flex items-center justify-between mt-auto pt-2 gap-3">
-						{displayPrice && (
-							<p
-								className="font-sans font-bold text-lg"
-								style={{ color: "var(--text-primary)" }}
-							>
-								{displayPrice}
-							</p>
+					{/* biome-ignore lint/a11y/useKeyWithClickEvents: stops card navigation from bubbling through cart controls */}
+					{/* biome-ignore lint/a11y/noStaticElementInteractions: same */}
+					<div
+						onClick={(e) => e.stopPropagation()}
+						className="flex flex-col gap-2 mt-auto pt-2"
+					>
+						{hasMultipleVariants && (
+							<Select
+								size="sm"
+								value={selectedVariantId}
+								onValueChange={setSelectedVariantId}
+								aria-label="Select variant"
+								className="mb-2"
+								options={product.variants.map((v) => ({
+									value: v.id,
+									label: v.name ?? v.id,
+								}))}
+							/>
 						)}
 
-						{/* biome-ignore lint/a11y/useKeyWithClickEvents: stops card navigation from bubbling through cart controls */}
-						{/* biome-ignore lint/a11y/noStaticElementInteractions: same */}
-						<div onClick={(e) => e.stopPropagation()}>
+						<div className="flex items-center justify-between gap-3">
+							{displayPrice && (
+								<p
+									className="font-sans font-bold text-lg"
+									style={{ color: "var(--text-primary)" }}
+								>
+									{displayPrice}
+								</p>
+							)}
+
 							{inCart ? (
 								<QuantityControl
 									quantity={quantity}
-									onIncrement={() => increment(product.id)}
-									onDecrement={() => decrement(product.id)}
+									onIncrement={() => increment(product.id, selectedVariantId)}
+									onDecrement={() => decrement(product.id, selectedVariantId)}
 								/>
 							) : (
 								<button
 									type="button"
-									onClick={() => addItem(product.id)}
+									onClick={() => addItem(product.id, selectedVariantId)}
 									className="btn btn-primary btn-sm"
 									disabled={isOutOfStock}
 								>

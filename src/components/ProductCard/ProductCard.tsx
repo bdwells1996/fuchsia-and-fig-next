@@ -116,6 +116,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 								value={selectedVariantId}
 								onValueChange={setSelectedVariantId}
 								aria-label="Select variant"
+								className="mb-2"
 								options={product.variants.map((v) => ({
 									value: v.id,
 									label: v.name ?? v.id,

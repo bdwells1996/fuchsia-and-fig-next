@@ -3,6 +3,7 @@
 import * as RadixSelect from "@radix-ui/react-select";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import clsx from "clsx";
 
 export interface SelectOption {
 	value: string;
@@ -18,6 +19,7 @@ interface SelectProps {
 	disabled?: boolean;
 	size?: "sm" | "md";
 	"aria-label"?: string;
+	className?: string;
 }
 
 export function Select({
@@ -28,6 +30,7 @@ export function Select({
 	disabled,
 	size = "md",
 	"aria-label": ariaLabel,
+	className,
 }: SelectProps) {
 	return (
 		<RadixSelect.Root
@@ -36,7 +39,11 @@ export function Select({
 			disabled={disabled}
 		>
 			<RadixSelect.Trigger
-				className={`select-trigger ${size === "sm" ? "select-trigger-sm" : ""}`}
+				className={clsx(
+					"select-trigger",
+					className,
+					size === "sm" && "select-trigger-sm",
+				)}
 				aria-label={ariaLabel}
 			>
 				<RadixSelect.Value placeholder={placeholder} />
@@ -46,14 +53,22 @@ export function Select({
 			</RadixSelect.Trigger>
 
 			<RadixSelect.Portal>
-				<RadixSelect.Content className="select-content" position="popper" sideOffset={6}>
+				<RadixSelect.Content
+					className="select-content"
+					position="popper"
+					sideOffset={6}
+				>
 					<RadixSelect.ScrollUpButton className="select-scroll-btn">
 						<ChevronUpIcon size={14} />
 					</RadixSelect.ScrollUpButton>
 
 					<RadixSelect.Viewport className="select-viewport">
 						{options.map((opt) => (
-							<SelectItem key={opt.value} value={opt.value} disabled={opt.disabled}>
+							<SelectItem
+								key={opt.value}
+								value={opt.value}
+								disabled={opt.disabled}
+							>
 								{opt.label}
 							</SelectItem>
 						))}

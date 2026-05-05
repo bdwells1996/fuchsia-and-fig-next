@@ -4,6 +4,7 @@ import { createContext, useReducer, useEffect } from "react";
 
 export interface CartItem {
 	productId: string;
+	variantId: string;
 	quantity: number;
 }
 
@@ -19,26 +20,30 @@ interface CartState {
 
 type CartAction =
 	| { type: "HYDRATE"; items: CartItem[] }
-	| { type: "ADD"; productId: string }
-	| { type: "INCREMENT"; productId: string }
-	| { type: "DECREMENT"; productId: string }
-	| { type: "REMOVE"; productId: string }
+	| { type: "ADD"; productId: string; variantId: string }
+	| { type: "INCREMENT"; productId: string; variantId: string }
+	| { type: "DECREMENT"; productId: string; variantId: string }
+	| { type: "REMOVE"; productId: string; variantId: string }
 	| { type: "CLEAR" };
 
 export interface CartContextValue {
 	items: CartItem[];
 	hydrated: boolean;
 	totalItems: number;
-	addItem: (productId: string) => void;
-	increment: (productId: string) => void;
-	decrement: (productId: string) => void;
-	remove: (productId: string) => void;
+	addItem: (productId: string, variantId: string) => void;
+	increment: (productId: string, variantId: string) => void;
+	decrement: (productId: string, variantId: string) => void;
+	remove: (productId: string, variantId: string) => void;
 	clear: () => void;
-	getQuantity: (productId: string) => number;
+	getQuantity: (productId: string, variantId: string) => number;
 }
 
 const CART_KEY = "fuchsia-fig-cart";
 const EXPIRY_MS = 48 * 60 * 60 * 1000;
+
+function matchItem(item: CartItem, productId: string, variantId: string) {
+	return item.productId === productId && item.variantId === variantId;
+}
 
 function reducer(state: CartState, action: CartAction): CartState {
 	switch (action.type) {
@@ -46,12 +51,14 @@ function reducer(state: CartState, action: CartAction): CartState {
 			return { items: action.items, hydrated: true };
 
 		case "ADD": {
-			const existing = state.items.find((i) => i.productId === action.productId);
+			const existing = state.items.find((i) =>
+				matchItem(i, action.productId, action.variantId),
+			);
 			if (existing) {
 				return {
 					...state,
 					items: state.items.map((i) =>
-						i.productId === action.productId
+						matchItem(i, action.productId, action.variantId)
 							? { ...i, quantity: i.quantity + 1 }
 							: i,
 					),
@@ -59,7 +66,10 @@ function reducer(state: CartState, action: CartAction): CartState {
 			}
 			return {
 				...state,
-				items: [...state.items, { productId: action.productId, quantity: 1 }],
+				items: [
+					...state.items,
+					{ productId: action.productId, variantId: action.variantId, quantity: 1 },
+				],
 			};
 		}
 
@@ -67,23 +77,31 @@ function reducer(state: CartState, action: CartAction): CartState {
 			return {
 				...state,
 				items: state.items.map((i) =>
-					i.productId === action.productId ? { ...i, quantity: i.quantity + 1 } : i,
+					matchItem(i, action.productId, action.variantId)
+						? { ...i, quantity: i.quantity + 1 }
+						: i,
 				),
 			};
 
 		case "DECREMENT": {
-			const item = state.items.find((i) => i.productId === action.productId);
+			const item = state.items.find((i) =>
+				matchItem(i, action.productId, action.variantId),
+			);
 			if (!item) return state;
 			if (item.quantity <= 1) {
 				return {
 					...state,
-					items: state.items.filter((i) => i.productId !== action.productId),
+					items: state.items.filter(
+						(i) => !matchItem(i, action.productId, action.variantId),
+					),
 				};
 			}
 			return {
 				...state,
 				items: state.items.map((i) =>
-					i.productId === action.productId ? { ...i, quantity: i.quantity - 1 } : i,
+					matchItem(i, action.productId, action.variantId)
+						? { ...i, quantity: i.quantity - 1 }
+						: i,
 				),
 			};
 		}
@@ -91,7 +109,9 @@ function reducer(state: CartState, action: CartAction): CartState {
 		case "REMOVE":
 			return {
 				...state,
-				items: state.items.filter((i) => i.productId !== action.productId),
+				items: state.items.filter(
+					(i) => !matchItem(i, action.productId, action.variantId),
+				),
 			};
 
 		case "CLEAR":
@@ -108,13 +128,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 	const [state, dispatch] = useReducer(reducer, { items: [], hydrated: false });
 
 	// Hydrate from localStorage after mount, discarding carts older than 48 hours
+	// or carts from before the variantId field was introduced
 	useEffect(() => {
 		try {
 			const raw = localStorage.getItem(CART_KEY);
 			if (raw) {
 				const stored: CartStore = JSON.parse(raw);
 				const age = Date.now() - new Date(stored.lastUpdated).getTime();
-				if (age < EXPIRY_MS && Array.isArray(stored.items)) {
+				const hasVariantIds =
+					Array.isArray(stored.items) &&
+					stored.items.every((i) => typeof i.variantId === "string");
+				if (age < EXPIRY_MS && hasVariantIds) {
 					dispatch({ type: "HYDRATE", items: stored.items });
 					return;
 				}
@@ -142,13 +166,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 		items: state.items,
 		hydrated: state.hydrated,
 		totalItems,
-		addItem: (productId) => dispatch({ type: "ADD", productId }),
-		increment: (productId) => dispatch({ type: "INCREMENT", productId }),
-		decrement: (productId) => dispatch({ type: "DECREMENT", productId }),
-		remove: (productId) => dispatch({ type: "REMOVE", productId }),
+		addItem: (productId, variantId) =>
+			dispatch({ type: "ADD", productId, variantId }),
+		increment: (productId, variantId) =>
+			dispatch({ type: "INCREMENT", productId, variantId }),
+		decrement: (productId, variantId) =>
+			dispatch({ type: "DECREMENT", productId, variantId }),
+		remove: (productId, variantId) =>
+			dispatch({ type: "REMOVE", productId, variantId }),
 		clear: () => dispatch({ type: "CLEAR" }),
-		getQuantity: (productId) =>
-			state.items.find((i) => i.productId === productId)?.quantity ?? 0,
+		getQuantity: (productId, variantId) =>
+			state.items.find((i) => matchItem(i, productId, variantId))?.quantity ?? 0,
 	};
 
 	return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

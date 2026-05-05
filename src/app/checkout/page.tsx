@@ -23,17 +23,20 @@ export default function CheckoutPage() {
 			.finally(() => setLoading(false));
 	}, []);
 
-	const lineItems = items.map((item) => ({
-		...item,
-		product: products.find((p) => p.id === item.productId) ?? null,
-	}));
+	const lineItems = items.map((item) => {
+		const product = products.find((p) => p.id === item.productId) ?? null;
+		const variant =
+			product?.variants.find((v) => v.id === item.variantId) ??
+			product?.variants[0] ??
+			null;
+		return { ...item, product, variant };
+	});
 
 	const currency =
-		lineItems.find((li) => li.product?.variants[0]?.currency)?.product
-			?.variants[0]?.currency ?? "GBP";
+		lineItems.find((li) => li.variant?.currency)?.variant?.currency ?? "GBP";
 
 	const subtotal = lineItems.reduce((sum, li) => {
-		const price = li.product?.variants[0]?.price ?? 0;
+		const price = li.variant?.price ?? 0;
 		return sum + price * li.quantity;
 	}, 0);
 
@@ -90,11 +93,11 @@ export default function CheckoutPage() {
 							<ul className="space-y-4">
 								{lineItems.map((li) => (
 									<li
-										key={li.productId}
+										key={`${li.productId}-${li.variantId}`}
 										className="card flex gap-4 p-4 items-start"
 									>
 										{/* Thumbnail */}
-										<div className="relative w-20 h-20 flex-shrink-0 rounded overflow-hidden surface-sunken">
+										<div className="relative w-20 h-20 shrink-0 rounded overflow-hidden surface-sunken">
 											{li.product?.imageUrl ? (
 												<Image
 													src={li.product.imageUrl}
@@ -118,37 +121,46 @@ export default function CheckoutPage() {
 											>
 												{li.product?.name ?? "Unknown product"}
 											</p>
-											{li.product?.variants[0]?.price != null && (
+											{li.variant?.name && (
+												<p
+													className="font-sans text-sm mt-0.5"
+													style={{ color: "var(--text-secondary)" }}
+												>
+													{li.variant.name}
+												</p>
+											)}
+											{li.variant?.price != null && (
 												<p
 													className="font-sans text-sm mt-1"
 													style={{ color: "var(--text-secondary)" }}
 												>
-													{formatPrice(
-														li.product.variants[0].price,
-														li.product.variants[0].currency,
-													)}{" "}
+													{formatPrice(li.variant.price, li.variant.currency)}{" "}
 													each
 												</p>
 											)}
 											<div className="mt-3">
 												<QuantityControl
 													quantity={li.quantity}
-													onIncrement={() => increment(li.productId)}
-													onDecrement={() => decrement(li.productId)}
-													onRemove={() => remove(li.productId)}
+													onIncrement={() =>
+														increment(li.productId, li.variantId)
+													}
+													onDecrement={() =>
+														decrement(li.productId, li.variantId)
+													}
+													onRemove={() => remove(li.productId, li.variantId)}
 												/>
 											</div>
 										</div>
 
 										{/* Line total */}
-										{li.product?.variants[0]?.price != null && (
+										{li.variant?.price != null && (
 											<p
-												className="font-sans font-bold text-base flex-shrink-0"
+												className="font-sans font-bold text-base shrink-0"
 												style={{ color: "var(--text-primary)" }}
 											>
 												{formatPrice(
-													li.product.variants[0].price * li.quantity,
-													li.product.variants[0].currency,
+													li.variant.price * li.quantity,
+													li.variant.currency,
 												)}
 											</p>
 										)}

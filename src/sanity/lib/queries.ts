@@ -6,7 +6,7 @@ const animationFields = `
   threshold,
   stagger,
   staggerDelay
-`
+`;
 
 export const PAGE_BY_SLUG_QUERY = `*[_type == "page" && slug.current == $slug][0]{
   _id,
@@ -52,11 +52,5 @@ export const PAGE_BY_SLUG_QUERY = `*[_type == "page" && slug.current == $slug][0
     alignment,
     imageAnimation{ ${animationFields} },
     textAnimation{ ${animationFields} },
-    // wordCloudCta fields
-    words[]{ word },
-    title,
-    ctaLabel,
-    ctaHref,
-    speed
   }
-}`
+}`;

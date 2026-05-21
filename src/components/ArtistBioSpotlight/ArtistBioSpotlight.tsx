@@ -171,7 +171,7 @@ export function ArtistBioSpotlight({
 							Sasha Reid
 						</h2>
 						<p
-							className={`mt-1 text-base tracking-wide ${isDark ? " text-white/70" : " text-text-muted"}`}
+							className={`mt-1 text-base font-medium tracking-wide ${isDark ? " text-white/70" : " text-text-muted"}`}
 						>
 							Pattern designer and illustrator
 						</p>

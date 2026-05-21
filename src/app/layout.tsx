@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { SanityLive } from "@/sanity/lib/live";
 import { VisualEditing } from "next-sanity/visual-editing";
 import { draftMode } from "next/headers";
-import { Quicksand, Geist_Mono, Abril_Fatface } from "next/font/google";
+import { Bricolage_Grotesque, Geist_Mono, Abril_Fatface } from "next/font/google";
 import { CartProvider } from "@/components/Cart/CartProvider";
 import "./globals.css";
 
-const quicksand = Quicksand({
-  variable: "--font-quicksand",
+const bricolageGrotesque = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   display: "swap",
@@ -38,7 +38,7 @@ export default async function RootLayout({
   const { isEnabled: isDraftMode } = await draftMode();
 
   return (
-    <html lang="en" className={`${quicksand.variable} ${geistMono.variable} ${abrilFatface.variable}`}>
+    <html lang="en" className={`${bricolageGrotesque.variable} ${geistMono.variable} ${abrilFatface.variable}`}>
       <body className="antialiased">
         <CartProvider>
           {children}

@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @import "../styles/buttons.css";
 
+@font-face {
+  font-family: "Glitten";
+  src: url("/fonts/glitten-regular-webfont.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ================================================
    FUCHSIA & FIG — DESIGN SYSTEM
    ================================================
@@ -13,8 +21,8 @@
    • Semantic — success, warning, error states
 
    Typography:
-   • Display — Abril Fatface (expressive serif titles)
-   • Sans    — Quicksand (soft, rounded body text)
+   • Display — Glitten (primary), Abril Fatface (fallback)
+   • Sans    — Bricolage Grotesque (body text)
    • Mono    — Geist Mono (technical)
 
    ================================================ */
@@ -101,9 +109,9 @@
   --color-error-900: #7f1d1d;
 
   /* ---- TYPOGRAPHY ---- */
-  --font-sans:    var(--font-quicksand), "Helvetica Neue", Arial, sans-serif;
+  --font-sans:    var(--font-bricolage), "Helvetica Neue", Arial, sans-serif;
   --font-mono:    var(--font-geist-mono), "Courier New", monospace;
-  --font-display: var(--font-abril), Georgia, "Times New Roman", serif;
+  --font-display: "Glitten", var(--font-abril), Georgia, "Times New Roman", serif;
 
   /* ---- BORDER RADIUS ---- */
   /* Custom tokens that don't override built-in rounded-* */
@@ -225,9 +233,9 @@
   --color-ring: var(--ring);
 
   /* Font families */
-  --font-sans:    var(--font-quicksand), "Helvetica Neue", Arial, sans-serif;
+  --font-sans:    var(--font-bricolage), "Helvetica Neue", Arial, sans-serif;
   --font-mono:    var(--font-geist-mono), "Courier New", monospace;
-  --font-display: var(--font-abril), Georgia, "Times New Roman", serif;
+  --font-display: "Glitten", var(--font-abril), Georgia, "Times New Roman", serif;
 }
 
 /* ------------------------------------------------
@@ -288,7 +296,7 @@ html {
 body {
   background-color: var(--background);
   color: var(--text-primary);
-  font-family: var(--font-quicksand), "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-bricolage), "Helvetica Neue", Arial, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -633,7 +641,7 @@ body {
      TYPOGRAPHY
   ========================================== */
 
-  /* Display headings — use font-display (Abril Fatface) */
+  /* Display headings — use font-display (Glitten, falls back to Abril Fatface) */
   .display-2xl {
     font-family: var(--font-display);
     font-size: clamp(3rem, 8vw, 6rem);

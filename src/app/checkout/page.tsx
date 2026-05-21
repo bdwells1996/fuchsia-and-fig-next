@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Nav from "@/components/Nav";
 import { useCart } from "@/components/Cart/useCart";
 import QuantityControl from "@/components/Cart/QuantityControl";
@@ -14,6 +15,9 @@ export default function CheckoutPage() {
 		useCart();
 	const [products, setProducts] = useState<Product[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [paying, setPaying] = useState(false);
+	const [payError, setPayError] = useState<string | null>(null);
+	const router = useRouter();
 
 	useEffect(() => {
 		fetch("/api/products")
@@ -31,6 +35,39 @@ export default function CheckoutPage() {
 			null;
 		return { ...item, product, variant };
 	});
+
+	async function handlePay() {
+		setPayError(null);
+		setPaying(true);
+		try {
+			const itemsPayload = lineItems.map((li) => ({
+				productId: li.productId,
+				variantId: li.variantId,
+				name: li.product?.name ?? "Item",
+				variantName: li.variant?.name ?? null,
+				price: li.variant?.price ?? 0,
+				quantity: li.quantity,
+				imageUrl: li.product?.imageUrl ?? null,
+			}));
+
+			const res = await fetch("/api/checkout/create-session", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ items: itemsPayload }),
+			});
+
+			const data = await res.json();
+			if (!res.ok || !data.url) {
+				setPayError(data.error ?? "Something went wrong. Please try again.");
+				return;
+			}
+			router.push(data.url);
+		} catch {
+			setPayError("Something went wrong. Please try again.");
+		} finally {
+			setPaying(false);
+		}
+	}
 
 	const currency =
 		lineItems.find((li) => li.variant?.currency)?.variant?.currency ?? "GBP";
@@ -202,12 +239,22 @@ export default function CheckoutPage() {
 									Shipping and taxes calculated at payment.
 								</p>
 
+								{payError && (
+									<p
+										className="text-sm font-sans"
+										style={{ color: "var(--color-error, #dc2626)" }}
+									>
+										{payError}
+									</p>
+								)}
+
 								<button
 									type="button"
 									className="btn btn-primary btn-md btn-full"
-									disabled
+									onClick={handlePay}
+									disabled={paying || loading}
 								>
-									Pay now — coming soon
+									{paying ? "Redirecting to payment…" : "Pay with Stripe"}
 								</button>
 							</div>
 						</div>

@@ -101,6 +101,8 @@ export interface ArtistBioSpotlightProps {
 	theme?: string;
 	imagePosition?: "left" | "right";
 	alignment?: "start" | "center" | "end";
+	title?: string;
+	subtitle?: string;
 	imageAnimation?: AnimationConfig;
 	textAnimation?: AnimationConfig;
 	animation?: AnimationConfig;
@@ -115,6 +117,8 @@ export function ArtistBioSpotlight({
 	theme = "surface",
 	imagePosition = "left",
 	alignment = "center",
+	title,
+	subtitle,
 	imageAnimation,
 	textAnimation,
 	animation,
@@ -164,6 +168,21 @@ export function ArtistBioSpotlight({
 				<div
 					className={`flex flex-col justify-${alignment}${isImageRight ? " md:order-1" : ""}`}
 				>
+					{(title || subtitle) && (
+						<AnimatedBlock animation={textAnimation} className="mb-6">
+							{title && (
+								<h2 className={`font-display text-4xl lg:text-5xl leading-tight${isDark ? " text-white" : ""}`}>
+									{title}
+								</h2>
+							)}
+							{subtitle && (
+								<p className={`mt-1 text-base tracking-wide uppercase${isDark ? " text-white/70" : " text-text-muted"}`}>
+									{subtitle}
+								</p>
+							)}
+						</AnimatedBlock>
+					)}
+
 					{excerpt && excerpt.length > 0 && (
 						<AnimatedBlock animation={textAnimation}>
 							<div className="prose-brand mb-8">
